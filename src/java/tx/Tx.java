@@ -11,6 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import util.Conexion;
 import vo.Persona;
 
@@ -18,7 +21,7 @@ import vo.Persona;
  *
  * @author LabingXEON
  */
-public class Tx {
+public class Tx<T> {
     private Connection conexion;
 
     public Tx() {
@@ -26,15 +29,15 @@ public class Tx {
         this.conexion = db.getConnection();
     }
     
-    public String create_Statement(Persona p) throws IllegalArgumentException, IllegalAccessException{
+    public String create_Statement(T t) throws IllegalArgumentException, IllegalAccessException{
         String query = "INSERT INTO ";
-        Field f [] = p.getClass().getDeclaredFields();
-        query += p.getClass().getSimpleName()+" values (";
+        Field f [] = t.getClass().getDeclaredFields();
+        query += t.getClass().getSimpleName()+" values (";
         for (int i = 0; i < f.length; i++) {
             if (i != f.length-1) {
-                query += "'"+f[i].get(p)+"',";
+                query += "'"+f[i].get(t)+"',";
             }else{
-                query += "'"+f[i].get(p)+"')";
+                query += "'"+f[i].get(t)+"')";
             }
         }
         
@@ -44,10 +47,10 @@ public class Tx {
         return query;
     }
     
-    public boolean insertar(Persona p) throws IllegalArgumentException, IllegalAccessException{
+    public boolean insertar(T t) throws IllegalArgumentException, IllegalAccessException{
         boolean res = false;
-        Field f [] = p.getClass().getDeclaredFields();
-        String consulta = create_Statement(p);
+        
+        String consulta = create_Statement(t);
         try {
             //----------------------------
             //Statement
@@ -65,5 +68,35 @@ public class Tx {
         }
 
         return res;
+    }
+    public String consultaBuscar(T t, String campo, String valor){
+        Field f [] = t.getClass().getDeclaredFields();
+        String query = "SELECT * FROM "+t.getClass().getSimpleName()+" where "+campo+" = '"+valor+"'";
+        
+        return query;
+    }
+    
+    public ArrayList<T> buscar(T t, String campo, String valor) {
+        ArrayList<T> arreglo = new ArrayList<T>();
+        try {
+            String consulta = consultaBuscar(t, campo, valor);
+            PreparedStatement statement
+                    = this.conexion.prepareStatement(consulta);
+
+            
+            ResultSet resultado = statement.executeQuery();
+            if (resultado.next()) {
+                
+//                String nombre = resultado.getString("nombre");
+//                String apellido = resultado.getString("apellido");
+//                int edad = resultado.getInt("edad");
+                arreglo.add((T) resultado);
+                
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Tx.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return arreglo;
     }
 }

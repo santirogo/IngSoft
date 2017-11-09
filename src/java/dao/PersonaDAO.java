@@ -5,6 +5,7 @@
  */
 package dao;
 
+import java.util.ArrayList;
 import tx.Tx;
 import vo.Persona;
 
@@ -23,7 +24,12 @@ public class PersonaDAO {
         this.tx.insertar(p);
     }
     
-    public void create_Statement(Persona p) throws IllegalArgumentException, IllegalAccessException{
-        this.tx.create_Statement(p);
+//    public void create_Statement(Persona p) throws IllegalArgumentException, IllegalAccessException{
+//        this.tx.create_Statement(p);
+//    }
+    
+    public ArrayList buscar(Persona p, String campo, String valor){
+        ArrayList arr =this.tx.buscar(p, campo, valor);
+        return arr;
     }
 }

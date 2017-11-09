@@ -1,11 +1,10 @@
 $(document).ready(function(){
     $('#boton').click(function(){
 
-        var nombre = $('#nombre').val();
         var apellido = $('#apellido').val();
-        var edad = $('#edad').val();
+        
         $.ajax({
-            url:'Servlet',
+            url:'Servlet2',
             type:'post',
             data:{nombre:nombre,apellido:apellido,edad:edad},
             dataType: 'json',

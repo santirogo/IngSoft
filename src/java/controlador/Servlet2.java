@@ -8,8 +8,6 @@ package controlador;
 import dao.PersonaDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,10 +16,10 @@ import vo.Persona;
 
 /**
  *
- * @author LabingXEON
+ * @author ayoro
  */
-public class Servlet extends HttpServlet {
-    private PersonaDAO dao;
+public class Servlet2 extends HttpServlet {
+    PersonaDAO dao;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -32,24 +30,15 @@ public class Servlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, IllegalArgumentException, IllegalAccessException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
-            System.out.println("ENTROOOOOOOO");
-            
             this.dao = new PersonaDAO();
-            String nombre = request.getParameter("nombre");
-            String apellido = request.getParameter("apellido");
-            int edad = Integer.parseInt(request.getParameter("edad"));
+            /* TODO output your page here. You may use following sample code. */
+            String dato = request.getParameter("dato");
+            String campo = request.getParameter("campo");
             Persona p = new Persona();
-            p.setNombre(nombre);
-            p.setApellido(apellido);
-            p.setEdad(edad);
-            dao.insertar(p);
-            
-            
-            //dao.create_Statement(p);
+            dao.buscar(p, campo, dato);
         }
     }
 
@@ -65,13 +54,7 @@ public class Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -85,13 +68,7 @@ public class Servlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(Servlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
